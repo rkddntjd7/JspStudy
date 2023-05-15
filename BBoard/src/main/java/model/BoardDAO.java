@@ -119,7 +119,7 @@ public class BoardDAO {
 			return v;
 		}
 		
-		// 하나의 게시글을 리턴하는 메소드
+		// BoardInfo 하나의 게시글을 리턴하는 메소드
 		public BoardBean getOneBoard(int num) {
 			
 			// 리턴 타입 선언
@@ -200,6 +200,114 @@ public class BoardDAO {
 				
 				con.close();
 				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// BoardUpdate용 Delete시 하나의 게시글을 리턴
+		public BoardBean getOneUpdateBoard(int num) {
+			
+			// 리턴 타입 선언
+			BoardBean bean = new BoardBean();
+			getCon();
+			
+			try {
+				
+				// 쿼리 준비
+				String sql = "select * from board where num = ?";
+				// 쿼리 실행 객체 선언
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, num);
+				// 쿼리 실행 후 결과를 리턴
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					bean.setNum(rs.getInt(1));
+					bean.setWriter(rs.getString(2));
+					bean.setEmail(rs.getString(3));
+					bean.setSubject(rs.getString(4));
+					bean.setPassword(rs.getString(5));
+					bean.setReg_date(rs.getDate(6).toString());
+					bean.setRef(rs.getInt(7));
+					bean.setRe_step(rs.getInt(8));
+					bean.setRe_level(rs.getInt(9));
+					bean.setReadcount(rs.getInt(10));
+					bean.setContent(rs.getString(11));
+				}
+				
+				con.close();
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return bean;
+		}
+		
+		// update 와 delete시 필요한 패스워드값을 리턴
+		public String getPass(int num) {
+			// 리턴할 변수 객체 선언
+			String pass = "";
+			getCon();
+			try {
+				
+				//쿼리 준비
+				String sql = "select password from board where num = ?";
+				// 쿼리 실행 객체 선언
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, num);
+				rs = pstmt.executeQuery();
+				// 패스워드값을 저장
+				if (rs.next()) {
+					pass = rs.getString(1);
+				}
+				// 자원반납
+				con.close();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return pass;
+		}
+		
+		// 하나의 게시글을 수정하는 메소드
+		public void updateBoard(BoardBean bean) {
+			
+			getCon();
+			
+			try {
+				
+				// 쿼리준비
+				String sql = "update board set subject=?, content=? where num=?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, bean.getSubject());
+				pstmt.setString(2, bean.getContent());
+				pstmt.setInt(3, bean.getNum());
+				
+				pstmt.executeUpdate();
+				
+				con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// 하나의 게시글을 삭제하는 메소드
+		public void deleteBoard(int num) {
+			
+			getCon();
+			
+			try {
+				
+				// 쿼리준비
+				String sql = "delete from board where num = ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, num);
+				pstmt.executeUpdate();
+				
+				con.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
