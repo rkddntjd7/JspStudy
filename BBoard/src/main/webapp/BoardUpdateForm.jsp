@@ -34,7 +34,7 @@
 		<td width="480" colspan="3"> &nbsp; <input type="password" name="password" size="60"/></td>
 	</tr>
 	<tr height="40">
-		<td width="120" align="center"> 제목 </td>
+		<td width="120" align="center"> 내용 </td>
 		<td width="480" colspan="3" > <textarea name="content" align="left" cols="60" rows="10"><%=bean.getContent() %></textarea></td>
 	</tr>
 	<tr height="40">
